@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PlacePrep – Career Guidance & Placement Preparation</title>
+<style>
+:root{--bg:#f6f8fc;--card:#fff;--ink:#14213d;--mute:#5b6b85;--pri:#12337a;--pri2:#e6edfb;--line:#d9e1f0;--ok:#127a4a;--bad:#b42318;--code:#0f1b3a;--codeink:#e8eefc;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1226;--card:#121c3a;--ink:#e8eefc;--mute:#9db0d3;--pri:#7ea4ff;--pri2:#1a2a57;--line:#243459;--ok:#4ade9a;--bad:#ff8a80;--code:#070d1f}}
+:root[data-theme="dark"]{--bg:#0b1226;--card:#121c3a;--ink:#e8eefc;--mute:#9db0d3;--pri:#7ea4ff;--pri2:#1a2a57;--line:#243459;--ok:#4ade9a;--bad:#ff8a80;--code:#070d1f}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.app{display:flex;min-height:100vh}
+nav{width:220px;background:var(--pri);color:#fff;padding:16px 10px;position:sticky;top:0;height:100vh;flex-shrink:0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) nav{background:#0d1733}}
+nav h1{font-size:18px;margin:4px 10px 14px}nav button{display:block;width:100%;text-align:left;background:none;border:0;color:#fff;padding:10px;border-radius:8px;font:inherit;cursor:pointer}
+nav button:hover,nav button.on{background:rgba(255,255,255,.18)}
+main{flex:1;padding:20px;max-width:960px;min-width:0}
+.top{display:none}
+@media(max-width:760px){.app{display:block}nav{display:none;position:fixed;inset:0 30% 0 0;z-index:20;height:auto;padding-top:calc(16px + env(safe-area-inset-top,0px))}nav.open{display:block}.top{display:flex;gap:10px;align-items:center;background:var(--pri);color:#fff;padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top,0px));position:sticky;top:0;z-index:10}.top button{background:rgba(255,255,255,.2);color:#fff;border:0;border-radius:8px;padding:6px 12px;font:inherit}main{padding:14px}}
+h2{margin:.2em 0 .5em}h3{margin:1.2em 0 .4em;color:var(--pri)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+button.b,a.b{background:var(--pri);color:#fff;border:0;border-radius:8px;padding:9px 14px;font:inherit;cursor:pointer;text-decoration:none;display:inline-block}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button.b,:root:not([data-theme="light"]) a.b{color:#0b1226}}
+button.g{background:var(--pri2);color:var(--pri);border:1px solid var(--line);border-radius:8px;padding:8px 12px;font:inherit;cursor:pointer}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px;width:100%}
+label{display:block;font-size:14px;color:var(--mute);margin:8px 0 3px}
+pre{background:var(--code);color:var(--codeink);padding:12px;border-radius:8px;overflow-x:auto;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace;margin:8px 0}
+.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}th,td{border:1px solid var(--line);padding:6px 10px;text-align:left}th{background:var(--pri2)}
+.bar{height:10px;background:var(--pri2);border-radius:6px;overflow:hidden}.bar i{display:block;height:100%;background:var(--pri)}
+.tag{display:inline-block;background:var(--pri2);color:var(--pri);border-radius:20px;padding:2px 10px;font-size:12px;margin:2px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.day{cursor:pointer;display:flex;gap:10px;align-items:center;justify-content:space-between}.day:hover{border-color:var(--pri)}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.note{font-size:13px;color:var(--mute)}
+.warn{background:var(--pri2);border-left:4px solid var(--pri);padding:8px 12px;border-radius:6px;font-size:14px}
+details{margin:6px 0}summary{cursor:pointer;color:var(--pri)}
+.opt{display:block;width:100%;text-align:left;margin:5px 0}
+</style></head><body>
+<div class="top"><button onclick="document.querySelector('nav').classList.toggle('open')" aria-label="Menu">☰ Menu</button><b>PlacePrep</b></div>
+<div class="app"><nav id="nav"></nav><main id="m" tabindex="-1"></main></div>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+/* ---------- storage (demo mode: this browser only) ---------- */
+let S={profile:{name:'',year:'2nd year',lang:'Java',skills:[],interests:[],hours:2,role:'Java Backend Developer'},done:{},watched:{},quiz:{a:0,c:0},plan:null};
+try{const x=localStorage.getItem('pp1');if(x)S=Object.assign(S,JSON.parse(x))}catch(e){}
+const save=()=>{try{localStorage.setItem('pp1',JSON.stringify(S))}catch(e){}};
+/* ---------- content ---------- */
+const yt=q=>'https://www.youtube.com/results?search_query='+encodeURIComponent(q);
+const L={
+jloop:{sub:'Java',t:'Java For Loops',min:45,pre:'Variables, operators, conditions',obj:['Write a for loop','Trace loop iterations','Count how many times a loop runs'],
+ def:'A for loop repeats a block of code a fixed number of times. It keeps the starting value, the stopping condition and the update step in one line.',
+ why:'Loops remove repeated code. Printing 100 numbers needs 3 lines instead of 100.',
+ syn:'for (initialization; condition; update) {\n    // body\n}',
+ rules:['Initialization runs once, first.','Condition is checked before every iteration; if false, the loop ends.','Update runs after each body execution.','A condition that is always true gives an infinite loop.'],
+ mistakes:['Off-by-one errors (&lt; vs &lt;=).','Forgetting the update step.','Putting a semicolon right after the for(...) header.'],
+ code:'public class Main {\n    public static void main(String[] args) {\n        int sum = 0;\n        for (int i = 1; i <= 5; i++) {\n            sum += i;\n        }\n        System.out.println("Sum = " + sum);\n    }\n}',
+ out:'Sum = 15',
+ lines:['int sum = 0; – accumulator starts at 0.','int i = 1 – loop counter starts at 1.','i <= 5 – loop runs while i is 1 to 5.','sum += i – adds the current i to sum.','i++ – moves to the next number.'],
+ dry:[['Start','-','0','-'],['1','i=1 ≤ 5 true','1','i→2'],['2','i=2 ≤ 5 true','3','i→3'],['3','i=3 ≤ 5 true','6','i→4'],['4','i=4 ≤ 5 true','10','i→5'],['5','i=5 ≤ 5 true','15','i→6'],['End','i=6 ≤ 5 false','15','exit']],dh:['Iteration','Condition','sum','Update'],
+ cx:'The body runs n times, so time is O(n). Only a few variables are used, so extra space is O(1). Doubling n doubles the work.',
+ q:[['Beginner','Print numbers 1 to 10 using a for loop.','Start i at 1, continue while i <= 10.','for(int i=1;i<=10;i++) System.out.println(i);'],['Intermediate','Print the sum of even numbers from 1 to 100.','Step i by 2, or test i % 2 == 0.','int s=0; for(int i=2;i<=100;i+=2) s+=i; System.out.println(s); // 2550'],['Advanced','Print a right triangle of * with n rows.','Use a nested loop: row i prints i stars.','for(int i=1;i<=n;i++){for(int j=1;j<=i;j++)System.out.print("*");System.out.println();}']],
+ iv:[['What is the difference between for and while?','for is used when the number of iterations is known; while when it depends on a condition.'],['Can any part of a for header be empty?','Yes. for(;;) is an infinite loop, usually exited with break.']],
+ rev:['for(init; cond; update)','Condition checked before each pass','Time O(n), space O(1)'],vq:'Java for loop beginner tutorial'},
+jarr:{sub:'Java',t:'Java Arrays',min:50,pre:'For loops',obj:['Declare and initialize arrays','Access by index','Traverse an array'],
+ def:'An array stores a fixed number of values of the same type in contiguous memory, accessed by index starting at 0.',why:'Arrays store collections of data and are the base of most data structures.',
+ syn:'int[] a = new int[5];\nint[] b = {10, 20, 30};\nint n = b.length;',rules:['Index range is 0 to length-1.','Size is fixed once created.','Default values: 0 for int, false for boolean, null for objects.'],
+ mistakes:['ArrayIndexOutOfBoundsException from using index = length.','Using length() instead of length.'],
+ code:'public class Main {\n    public static void main(String[] args) {\n        int[] a = {4, 9, 2, 7};\n        int max = a[0];\n        for (int i = 1; i < a.length; i++) {\n            if (a[i] > max) max = a[i];\n        }\n        System.out.println("Max = " + max);\n    }\n}',out:'Max = 9',
+ lines:['a holds 4 values at indexes 0 to 3.','max starts as the first element.','Loop checks each remaining element.','If an element is bigger, max is updated.'],
+ dry:[['1','a[1]=9 > 4','9'],['2','a[2]=2 > 9? no','9'],['3','a[3]=7 > 9? no','9']],dh:['i','Check','max'],
+ cx:'One pass over n elements: O(n) time, O(1) extra space. Reading a[i] by index is O(1).',
+ q:[['Beginner','Print all elements of an array.','Loop from 0 to length-1.','for(int x: a) System.out.println(x);'],['Intermediate','Find the sum and average of an array.','Keep a running sum, divide by length as double.','double avg=(double)sum/a.length;'],['Advanced','Reverse an array in place.','Swap a[i] with a[n-1-i] for i < n/2.','for(int i=0;i<n/2;i++){int t=a[i];a[i]=a[n-1-i];a[n-1-i]=t;}']],
+ iv:[['Are Java arrays objects?','Yes. They are objects with a length field and are stored on the heap.'],['Array vs ArrayList?','Arrays are fixed size and can hold primitives; ArrayList grows dynamically and holds objects.']],
+ rev:['Index 0..n-1','length is a field','Access O(1)'],vq:'Java arrays beginner tutorial'},
+pyfn:{sub:'Python',t:'Python Functions',min:40,pre:'Variables, conditions',obj:['Define and call functions','Use parameters and return','Understand default arguments'],
+ def:'A function is a named, reusable block of code that can take inputs (parameters) and give back a result (return value).',why:'Functions avoid repetition and make programs easier to test.',
+ syn:'def name(param1, param2=default):\n    # body\n    return value',rules:['Define with def, call with name(args).','No return means the function returns None.','Variables inside a function are local.'],
+ mistakes:['Forgetting to return a value.','Using a mutable default like [] as a default argument.'],
+ code:'def area(length, width=1):\n    return length * width\n\nprint(area(5, 3))\nprint(area(4))',out:'15\n4',
+ lines:['def area(...) defines the function; width defaults to 1.','return sends the product back to the caller.','area(5, 3) uses both arguments.','area(4) uses the default width of 1.'],
+ dry:[['area(5, 3)','5','3','15'],['area(4)','4','1 (default)','4']],dh:['Call','length','width','Returns'],
+ cx:'This function does one multiplication: O(1) time and space. Cost of a function depends on what its body does.',
+ q:[['Beginner','Write a function that returns the square of a number.','Return n * n.','def sq(n): return n*n'],['Intermediate','Write is_prime(n).','Check divisors up to the square root of n.','def is_prime(n):\n    if n<2: return False\n    i=2\n    while i*i<=n:\n        if n%i==0: return False\n        i+=1\n    return True'],['Advanced','Write a function that returns the min and max of a list as a tuple.','Python can return multiple values as a tuple.','def mm(a): return min(a), max(a)']],
+ iv:[['*args vs **kwargs?','*args collects extra positional arguments in a tuple; **kwargs collects keyword arguments in a dict.'],['Are arguments passed by value or reference?','By object reference. Mutating a list inside a function affects the caller\'s list.']],
+ rev:['def f(x): return ...','Default None return','Local scope'],vq:'Python functions beginner tutorial'},
+bsrch:{sub:'DSA',t:'Binary Search',min:55,pre:'Arrays, loops, sorting basics',obj:['Explain why the array must be sorted','Implement binary search','Derive O(log n)'],
+ def:'Binary search finds a target in a sorted array by repeatedly comparing with the middle element and discarding half the range.',why:'It is far faster than linear search on large sorted data and the basis of many interview problems.',
+ syn:'low = 0, high = n-1\nwhile low <= high:\n    mid = low + (high-low)/2\n    if a[mid] == key: return mid\n    else if a[mid] < key: low = mid+1\n    else: high = mid-1\nreturn -1',rules:['Array must be sorted.','Use low + (high-low)/2 to avoid integer overflow.'],
+ mistakes:['Using low < high instead of low <= high.','Not moving low/high past mid (infinite loop).'],
+ code:'public class Main {\n    static int search(int[] a, int key) {\n        int low = 0, high = a.length - 1;\n        while (low <= high) {\n            int mid = low + (high - low) / 2;\n            if (a[mid] == key) return mid;\n            else if (a[mid] < key) low = mid + 1;\n            else high = mid - 1;\n        }\n        return -1;\n    }\n    public static void main(String[] args) {\n        int[] a = {2, 5, 8, 12, 16, 23, 38};\n        System.out.println(search(a, 23));\n    }\n}',out:'5',
+ lines:['low and high mark the current search range.','mid is the middle index.','Equal: found, return index.','Smaller: target is on the right, so low = mid+1.','Larger: target is on the left, so high = mid-1.'],
+ dry:[['1','0','6','3','12 < 23 → low=4'],['2','4','6','5','23 = 23 → found at 5']],dh:['Step','low','high','mid','Decision'],
+ cx:'Each step halves the range: n → n/2 → n/4 … → 1. That takes about log₂(n) steps, so time is O(log n). For 1,000,000 items that is about 20 steps. Iterative version uses O(1) space. Best case O(1) (middle hit), worst O(log n).',
+ q:[['Beginner','How many comparisons are needed at most for 1000 sorted items?','Find k where 2^k ≥ 1000.','About 10.'],['Intermediate','Find the first occurrence of a key in a sorted array with duplicates.','When found, keep searching left with high = mid-1.','Store mid in ans and set high=mid-1.'],['Advanced','Find the square root (floor) of n using binary search.','Search answers between 1 and n.','Find largest x with x*x <= n.']],
+ iv:[['Why O(log n)?','The search space halves every step.'],['Can you use it on an unsorted array?','No, sorting is required first.']],
+ rev:['Sorted input only','O(log n) time','mid = low+(high-low)/2'],vq:'binary search algorithm explained beginner'},
+sqlj:{sub:'SQL',t:'SQL Joins',min:50,pre:'SELECT, WHERE, keys',obj:['Explain INNER and LEFT JOIN','Write join queries','Read join results'],
+ def:'A join combines rows from two tables using a related column, usually a foreign key matching a primary key.',why:'Real data is split across tables; joins bring it back together.',
+ syn:'SELECT a.col, b.col\nFROM A a\nINNER JOIN B b ON a.key = b.key;',rules:['INNER JOIN keeps only matching rows.','LEFT JOIN keeps all rows from the left table, with NULLs for no match.','Dialect: standard SQL (works in MySQL, PostgreSQL).'],
+ mistakes:['Forgetting the ON condition (creates a cross join).','Ambiguous column names without table aliases.'],
+ code:'-- students(id, name, dept_id)  departments(id, dept_name)\n-- students: (1,Asha,10) (2,Ravi,20) (3,Meena,NULL)\n-- departments: (10,CSE) (20,IT) (30,ECE)\nSELECT s.name, d.dept_name\nFROM students s\nINNER JOIN departments d ON s.dept_id = d.id;',out:'Asha | CSE\nRavi | IT',
+ lines:['FROM students s – the left table, alias s.','INNER JOIN departments d – the right table.','ON s.dept_id = d.id – matches rows by key.','Meena has no department, so she is dropped by INNER JOIN.'],
+ dry:[['Asha','10','CSE','kept'],['Ravi','20','IT','kept'],['Meena','NULL','none','dropped']],dh:['Student','dept_id','Match','Result'],
+ cx:'A simple nested-loop join compares each row of A with B: O(n × m). Indexes on the join column let the database do it close to O(n log m).',
+ q:[['Beginner','Which join shows all students even without a department?','Keep all left rows.','LEFT JOIN'],['Intermediate','Write a query to list departments with no students.','LEFT JOIN from departments, filter s.id IS NULL.','SELECT d.dept_name FROM departments d LEFT JOIN students s ON s.dept_id=d.id WHERE s.id IS NULL;'],['Advanced','Count students per department including empty ones.','LEFT JOIN + GROUP BY.','SELECT d.dept_name, COUNT(s.id) FROM departments d LEFT JOIN students s ON s.dept_id=d.id GROUP BY d.dept_name;']],
+ iv:[['INNER vs LEFT JOIN?','INNER returns matches only; LEFT returns all left rows plus matches.'],['What is a self join?','Joining a table with itself, e.g. employees with their managers.']],
+ rev:['INNER = matches','LEFT = all left + matches','Always add ON'],vq:'SQL joins explained beginner tutorial'}
+};
+const ROADS={'Java Backend Developer':['jloop','jarr','bsrch','sqlj'],'Software Developer':['jloop','jarr','bsrch','pyfn','sqlj'],'Python Developer':['pyfn','jloop','bsrch','sqlj'],'Data Analyst':['pyfn','sqlj','jarr'],'Data Scientist':['pyfn','sqlj','bsrch'],'AI/ML Engineer':['pyfn','jarr','bsrch'],'Full-Stack Developer':['jloop','jarr','sqlj','bsrch'],'Cloud Engineer':['pyfn','sqlj','jloop']};
+const CAREERS={'Software Developer':['java','python','dsa','sql','git','oop'],'Java Backend Developer':['java','sql','oop','spring','dsa','git'],'Python Developer':['python','sql','oop','git','dsa'],'Data Analyst':['sql','python','excel','statistics','pandas'],'Data Scientist':['python','statistics','pandas','sql','ml'],'AI/ML Engineer':['python','ml','statistics','numpy','dsa'],'Full-Stack Developer':['javascript','react','sql','git','node'],'Cloud Engineer':['linux','networking','python','git','cloud']};
+const INTRO={'Software Developer':'Designs, writes and tests software.','Java Backend Developer':'Builds server-side services and APIs in Java.','Python Developer':'Builds applications, scripts and services in Python.','Data Analyst':'Turns data into reports and insights.','Data Scientist':'Builds statistical and predictive models.','AI/ML Engineer':'Trains and deploys machine-learning systems.','Full-Stack Developer':'Works on both frontend and backend.','Cloud Engineer':'Manages cloud infrastructure and deployment.'};
+const APT=[{q:'What is 20% of 250?',o:['40','50','60','25'],a:1,e:'20% = 20/100. 250 × 0.20 = 50.'},{q:'Next in series: 2, 6, 12, 20, ?',o:['28','30','32','26'],a:1,e:'Differences are 4, 6, 8, so the next is 10: 20 + 10 = 30.'},{q:'A train covers 120 km in 2 hours. Its speed is?',o:['50 km/h','60 km/h','70 km/h','80 km/h'],a:1,e:'Speed = distance / time = 120 / 2 = 60 km/h.'},{q:'Choose the correct sentence.',o:['He don\'t like tea.','He doesn\'t likes tea.','He doesn\'t like tea.','He not like tea.'],a:2,e:'With "doesn\'t", the main verb stays in base form: "like".'}];
+const CODEP=[{t:'Sum of N numbers',d:'Beginner',s:'Read n. Print 1 + 2 + … + n.',i:'5',o:'15',sol:'n = int(input())\nprint(n*(n+1)//2)',c:'Formula gives O(1) time.'},{t:'Reverse a string',d:'Beginner',s:'Read a string and print it reversed.',i:'hello',o:'olleh',sol:'s = input()\nprint(s[::-1])',c:'O(n) time and space.'}];
+/* ---------- helpers ---------- */
+const pct=()=>{const ids=[...new Set(Object.values(ROADS).flat())];return ids.length?Math.round(100*ids.filter(i=>S.done[i]).length/ids.length):0};
+const NAV=[['home','Home'],['career','Career Guidance'],['road','Learning Roadmap'],['apt','Aptitude'],['code','Coding Practice'],['dash','Dashboard'],['prof','Profile']];
+let view='home',cur=null;
+function go(v,id){view=v;cur=id||null;$('nav').classList.remove('open');render();window.scrollTo(0,0)}
+function renderNav(){$('#nav').innerHTML='<h1>PlacePrep</h1>'+NAV.map(([k,l])=>`<button class="${view===k||(k==='road'&&view==='lesson')?'on':''}" onclick="go('${k}')">${l}</button>`).join('')+'<p class="note" style="color:#cdd8f5;padding:0 10px">Demo mode: progress is saved in this browser only.</p>'}
+function render(){renderNav();const f={home,career,road,lesson,apt,code,dash,prof}[view];$('#m').innerHTML=f();if(view==='career')careerRes()}
+/* ---------- pages ---------- */
+function home(){return `<h2>AI-Based Career Guidance & Placement Preparation</h2>
+<p>Pick a career, get a daily plan, open full lessons, practise, and track progress.</p>
+<div class="row"><button class="b" onclick="go('${S.profile.name?'dash':'prof'}')">Get Started</button><button class="g" onclick="go('career')">Career Guidance</button></div>
+<div class="card warn">This version runs in <b>demo mode</b>: no login, progress stays in this browser. Recommendations are <b>rule-based</b> (not AI-generated). Code is not executed. Videos are YouTube search links, not individually verified videos.</div>
+<div class="grid">
+<div class="card"><b>Career Guidance</b><p class="note">8 career paths with transparent skill matching.</p></div>
+<div class="card"><b>Learning Roadmap</b><p class="note">Daily plan; every topic opens a full lesson.</p></div>
+<div class="card"><b>Aptitude</b><p class="note">MCQs with instant explanations and scoring.</p></div>
+<div class="card"><b>Coding Practice</b><p class="note">Editor, sample tests, reference solutions.</p></div></div>
+<h3>Your progress</h3><div class="bar"><i style="width:${pct()}%"></i></div><p class="note">${pct()}% of available lessons completed</p>`}
+function career(){const roles=Object.keys(CAREERS);return `<h2>Career Guidance</h2>
+<div class="card"><b>How the match score works (rule-based):</b> score = skills you listed that the career requires ÷ total required skills × 100. Skills are typed in your Profile, comma-separated. No AI is used.</div>
+<label>Your skills (comma-separated, e.g. python, sql, git)</label><input id="sk" value="${esc(S.profile.skills.join(', '))}" oninput="updSk()">
+<div id="cr"></div>`}
+function updSk(){S.profile.skills=$('#sk').value.split(',').map(x=>x.trim().toLowerCase()).filter(Boolean);save();careerRes()}
+function careerRes(){const sk=S.profile.skills;$('#cr').innerHTML=Object.entries(CAREERS).map(([r,req])=>{const m=req.filter(x=>sk.includes(x)),gap=req.filter(x=>!sk.includes(x)),sc=Math.round(100*m.length/req.length);return {r,req,gap,sc}}).sort((a,b)=>b.sc-a.sc).map(({r,req,gap,sc})=>`<div class="card"><div class="row" style="justify-content:space-between"><b>${r}</b><span class="tag">Match ${sc}% (rule-based)</span></div><p>${INTRO[r]}</p><div class="bar"><i style="width:${sc}%"></i></div><p class="note">Required: ${req.join(', ')}<br>Skill gaps: ${gap.length?gap.join(', '):'none'}</p><button class="g" onclick="S.profile.role='${r}';S.plan=null;save();go('road')">Build roadmap</button></div>`).join('')}
+function road(){const p=S.profile,ids=ROADS[p.role]||[];const days=ids.map((id,i)=>({d:i+1,id}));
+return `<h2>Learning Roadmap</h2><div class="card"><div class="grid"><div><label>Target career</label><select onchange="S.profile.role=this.value;save();render()">${Object.keys(CAREERS).map(r=>`<option ${r===p.role?'selected':''}>${r}</option>`).join('')}</select></div><div><label>Daily study hours</label><input type="number" min="1" max="12" value="${p.hours}" onchange="S.profile.hours=+this.value||1;save();render()"></div></div></div>
+<p class="note">This demo includes ${Object.keys(L).length} complete lessons. Each day below opens its full lesson. Day length: about ${p.hours} h.</p>
+${days.map(({d,id})=>{const l=L[id];return `<div class="card day" onclick="go('lesson','${id}')" tabindex="0" onkeydown="if(event.key==='Enter')go('lesson','${id}')"><div><b>Day ${d}: ${l.t}</b><br><span class="note">${l.sub} · ~${l.min} min · ${l.obj[0]}</span></div><span>${S.done[id]?'<span class="ok">✔ Done</span>':'Pending'}</span></div>`}).join('')}
+<p>Progress: ${days.filter(x=>S.done[x.id]).length} / ${days.length} topics</p>`}
+function lesson(){const id=cur,l=L[id];if(!l){return road()}const ids=ROADS[S.profile.role]||[],ix=ids.indexOf(id);
+const tbl=`<div class="scroll"><table><tr>${l.dh.map(h=>`<th>${h}</th>`).join('')}</tr>${l.dry.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</table></div>`;
+return `<button class="g" onclick="go('road')">← Roadmap</button><h2>${l.t}</h2><span class="tag">${l.sub}</span><span class="tag">~${l.min} min</span><span class="tag">Prereq: ${l.pre}</span>
+<h3>A. Objectives</h3><ul>${l.obj.map(o=>`<li>${o}</li>`).join('')}</ul>
+<h3>B. Theory</h3><p><b>Definition:</b> ${l.def}</p><p><b>Why it matters:</b> ${l.why}</p><b>Syntax</b><pre>${esc(l.syn)}</pre><b>Rules</b><ul>${l.rules.map(o=>`<li>${o}</li>`).join('')}</ul><b>Common mistakes</b><ul>${l.mistakes.map(o=>`<li>${o}</li>`).join('')}</ul>
+<h3>C. Working example</h3><pre>${esc(l.code)}</pre><b>Output</b><pre>${esc(l.out)}</pre><b>Line-by-line</b><ol>${l.lines.map(o=>`<li>${esc(o)}</li>`).join('')}</ol>
+<h3>D. Dry run</h3>${tbl}
+<h3>E. Complexity</h3><p>${l.cx}</p><p class="note">Time complexity = how the number of steps grows with input size n. Space complexity = how extra memory grows with n. O(1) constant, O(log n) halving, O(n) one pass, O(n log n) efficient sorting, O(n²) nested loops.</p>
+<h3>F. Videos</h3><div class="card"><p>Search: <a href="${yt(l.vq)}" target="_blank" rel="noopener">${esc(l.vq)} on YouTube ↗</a></p><p class="note">This is a YouTube search link. Individual videos are not verified by this app, so pick a recent beginner-friendly one.</p><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" style="width:auto" ${S.watched[id]?'checked':''} onchange="S.watched['${id}']=this.checked;save()"> Mark video as watched</label></div>
+<h3>G. Practice</h3>${l.q.map((q,i)=>`<div class="card"><span class="tag">${q[0]}</span> ${q[1]}<details><summary>Hint</summary>${q[2]}</details><details><summary>Show solution</summary><pre>${esc(q[3])}</pre></details></div>`).join('')}
+<h3>H. Interview questions</h3>${l.iv.map(q=>`<details><summary>${q[0]}</summary>${q[1]}</details>`).join('')}
+<h3>I. Revision</h3><ul>${l.rev.map(o=>`<li>${esc(o)}</li>`).join('')}</ul>
+<h3>J. Progress</h3><div class="row"><button class="b" onclick="S.done['${id}']=!S.done['${id}'];save();render()">${S.done[id]?'✔ Completed (undo)':'Mark as completed'}</button>
+${ix>0?`<button class="g" onclick="go('lesson','${ids[ix-1]}')">← Previous</button>`:''}${ix>=0&&ix<ids.length-1?`<button class="g" onclick="go('lesson','${ids[ix+1]}')">Next →</button>`:''}</div>`}
+let qi=0,ans=null;
+function apt(){const q=APT[qi%APT.length];return `<h2>Aptitude Practice</h2><p class="note">Score: ${S.quiz.c} correct of ${S.quiz.a} attempted</p><div class="card"><b>Q${qi%APT.length+1}. ${q.q}</b>${q.o.map((o,i)=>`<button class="g opt" ${ans!==null?'disabled':''} onclick="pick(${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join('')}
+${ans!==null?`<p class="${ans===q.a?'ok':'bad'}"><b>${ans===q.a?'Correct!':'Incorrect.'}</b> Correct answer: ${String.fromCharCode(65+q.a)}. ${q.o[q.a]}</p><p>${q.e}</p><button class="b" onclick="qi++;ans=null;render()">Next question</button>`:''}</div>`}
+function pick(i){const q=APT[qi%APT.length];ans=i;S.quiz.a++;if(i===q.a)S.quiz.c++;save();render()}
+let cp=0;
+function code(){const p=CODEP[cp];return `<h2>Coding Practice</h2><div class="row">${CODEP.map((x,i)=>`<button class="${i===cp?'b':'g'}" onclick="cp=${i};render()">${x.t}</button>`).join('')}</div>
+<div class="card"><b>${p.t}</b> <span class="tag">${p.d}</span><p>${p.s}</p><p class="note">Sample input: <code>${p.i}</code> → Sample output: <code>${p.o}</code></p>
+<label>Language</label><select><option>Python</option><option>Java</option><option>C</option></select><label>Code</label><textarea id="ed" rows="8" spellcheck="false" style="font-family:monospace"></textarea>
+<div class="row" style="margin-top:8px"><button class="b" onclick="runMsg()">Run Code</button><button class="b" onclick="runMsg()">Submit</button><button class="g" onclick="$('#ed').value=''">Reset</button><button class="g" onclick="navigator.clipboard&&navigator.clipboard.writeText($('#ed').value)">Copy</button></div>
+<div id="out" class="note" style="margin-top:8px">Output panel</div>
+<details><summary>Reference solution (Python)</summary><pre>${esc(p.sol)}</pre><p>${p.c}</p></details></div>`}
+function runMsg(){$('#out').innerHTML='<b class="bad">Live code execution is not available in this version.</b> No tests were run and nothing has passed. Compare your answer with the sample output and reference solution.'}
+function dash(){const ids=[...new Set(ROADS[S.profile.role]||[])],d=ids.filter(i=>S.done[i]).length;return `<h2>Dashboard</h2><div class="grid"><div class="card"><b>Roadmap</b><p>${d} / ${ids.length} topics done</p><div class="bar"><i style="width:${ids.length?100*d/ids.length:0}%"></i></div></div><div class="card"><b>Videos watched</b><p>${Object.values(S.watched).filter(Boolean).length}</p></div><div class="card"><b>Aptitude</b><p>${S.quiz.c} / ${S.quiz.a} correct</p></div></div>
+<h3>Pending topics</h3>${ids.filter(i=>!S.done[i]).map(i=>`<div class="card day" onclick="go('lesson','${i}')"><span>${L[i].t}</span><span>Resume →</span></div>`).join('')||'<p>All done!</p>'}
+<h3>Completed topics</h3>${ids.filter(i=>S.done[i]).map(i=>`<span class="tag">${L[i].t}</span>`).join('')||'<p class="note">None yet.</p>'}
+<p><button class="g" onclick="if(confirm('Reset all progress?')){S.done={};S.watched={};S.quiz={a:0,c:0};save();render()}">Reset progress</button></p>`}
+function prof(){const p=S.profile;return `<h2>Profile</h2><div class="card"><div class="grid"><div><label>Full name *</label><input id="pn" value="${esc(p.name)}"></div><div><label>Current year</label><input id="py" value="${esc(p.year)}"></div><div><label>Preferred language</label><select id="pl">${['Java','Python','C'].map(x=>`<option ${x===p.lang?'selected':''}>${x}</option>`).join('')}</select></div><div><label>Target role</label><select id="pr">${Object.keys(CAREERS).map(r=>`<option ${r===p.role?'selected':''}>${r}</option>`).join('')}</select></div></div><div id="pe" class="bad"></div><p><button class="b" onclick="saveP()">Save profile</button></p></div>`}
+function saveP(){const n=$('#pn').value.trim();if(!n){$('#pe').textContent='Please enter your full name.';return}Object.assign(S.profile,{name:n,year:$('#py').value,lang:$('#pl').value,role:$('#pr').value});save();go('dash')}
+render();
+</script></body></html>
